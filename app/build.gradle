@@ -1,0 +1,129 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion COMPILE_SDK_VERSION.toInteger()
+    defaultConfig {
+        applicationId "ch.swissonid.template"
+        minSdkVersion MIN_SDK_VERSION.toInteger()
+        targetSdkVersion TARGET_SDK_VERSION.toInteger()
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    kapt {
+        generateStubs = true
+    }
+
+    flavorDimensions "app"
+    productFlavors {
+        dev {
+            // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
+            // to pre-dex each module and produce an APK that can be tested on
+            // Android Lollipop without time consuming dex merging processes.
+            minSdkVersion MIN_SDK_VERSION_DEV.toInteger()
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+        }
+
+        prod {
+            // The actual minSdkVersion for the application.
+            minSdkVersion MIN_SDK_VERSION.toInteger()
+        }
+    }
+
+
+    dexOptions {
+        preDexLibraries true
+        maxProcessCount 8
+        // Instead of setting the heap size for the DEX process, increase Gradle's
+        // heap size to enable dex-in-process.
+    }
+
+
+    aaptOptions {
+        // You should anyway use WebP format or SVG. To Convert your PNG to WebP checkout this
+        // link https://developer.android.com/studio/write/convert-webp.html#convert_images_to_webp.
+
+        //Because build types or product flavors don't define this property, you need to manually
+        // set this property to true when building the release version of your app.
+        cruncherEnabled false
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$KOTLIN_VERSION"
+
+    // ---------------------------------------------------------------------------
+    // GOOGLE SUPPORT LIBS
+    // ---------------------------------------------------------------------------
+    // support libs
+    implementation "com.android.support:appcompat-v7:$ANROID_SUPPORT_VERSION"
+    implementation "com.android.support:design:$ANROID_SUPPORT_VERSION"
+    implementation "com.android.support:support-dynamic-animation:$ANROID_SUPPORT_VERSION"
+    implementation "com.android.support.constraint:constraint-layout:$ANROID_SUPPORT_CONSTRAINT_LAYOUT_VERSION"
+
+    // android arch
+    implementation "android.arch.lifecycle:runtime:$ANROID_ARCH_VERSION"
+    implementation "android.arch.lifecycle:extensions:$ANROID_ARCH_VERSION"
+    kapt "android.arch.lifecycle:compiler:$ANROID_ARCH_VERSION"
+
+    //data binding
+    kapt "com.android.databinding:compiler:$ANDROID_GRADLE_TOOLS_VERSION"
+
+    // ---------------------------------------------------------------------------
+    // GOOGLE LIBS
+    // ---------------------------------------------------------------------------
+    // di
+    implementation "com.google.dagger:dagger:$DAGGER_VERSION"
+    implementation "com.google.dagger:dagger-android-support:$DAGGER_VERSION"
+    kapt "com.google.dagger:dagger-android-processor:$DAGGER_VERSION"
+    kapt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+
+    // ---------------------------------------------------------------------------
+    // SQUARE LIBS
+    // ---------------------------------------------------------------------------
+    implementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    implementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+    implementation "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
+
+    // ---------------------------------------------------------------------------
+    // OTHER LIBS
+    // ---------------------------------------------------------------------------
+    //material utils
+    implementation "blue.aodev:material-values:$MATERIAL_VALUES_VERSION"
+
+    //data binding utils
+    implementation "me.tatarka.bindingcollectionadapter2:bindingcollectionadapter:$BINDING_COLLECTION_ADAPTER_VERSION"
+    implementation "me.tatarka.bindingcollectionadapter2:bindingcollectionadapter-recyclerview:$BINDING_COLLECTION_ADAPTER_VERSION"
+
+    //rx
+    implementation "io.reactivex.rxjava2:rxjava:$RX_JAVA_VERSION"
+    implementation "io.reactivex.rxjava2:rxandroid:$RX_ANDROID_VERSION"
+    implementation "io.reactivex.rxjava2:rxkotlin:$RX_KOTLIN_VERSION"
+
+    // --------------------------------- TESTING ---------------------------------
+
+    testImplementation "junit:junit:$JUNIT_VERSION"
+    androidTestImplementation "com.android.support.test:runner:$RUNNER_VERSION"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
+}
