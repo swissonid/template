@@ -124,6 +124,8 @@ dependencies {
     // --------------------------------- TESTING ---------------------------------
 
     testImplementation "junit:junit:$JUNIT_VERSION"
+    testImplementation "com.google.truth:truth:$GOOGLE_TRUTH_VERSION"
+    testImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"
     androidTestImplementation "com.android.support.test:runner:$RUNNER_VERSION"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
 }
